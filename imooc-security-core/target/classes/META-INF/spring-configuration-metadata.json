@@ -12,11 +12,14 @@
       "sourceType": "com.imooc.security.core.properties.SecurityProperties",
       "name": "imooc.security.browser",
       "type": "com.imooc.security.core.properties.BrowserProperties"
+<<<<<<< HEAD
     },
     {
       "sourceType": "com.imooc.security.core.properties.SecurityProperties",
       "name": "imooc.security.code",
       "type": "com.imooc.security.core.properties.ValidateCodeProperties"
+=======
+>>>>>>> 865d22b8fe49ee3bf297f17cb15523f75462a127
     }
   ]
 }
