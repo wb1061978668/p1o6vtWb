@@ -45,11 +45,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		ValidateCodeFilter validateCodeFilter=new ValidateCodeFilter();
 		validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailHandler);
-<<<<<<< HEAD
 		validateCodeFilter.setSecurityProperties(securityProperties);//增加验证码接口可配置==的配置
 		validateCodeFilter.afterPropertiesSet();//增加验证码接口可配置==的配置
-=======
->>>>>>> 865d22b8fe49ee3bf297f17cb15523f75462a127
 		/*
 		 * 用表单登录：所有的请求都需要表单身份认证
 		 * */
