@@ -1,14 +1,19 @@
 package com.imooc.security.browser;
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.imooc.security.core.properties.SecurityProperties;
 import com.imooc.security.core.validate.code.ValidateCodeFilter;
@@ -29,6 +34,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AuthenticationFailureHandler imoocAuthenticationFailHandler;//注入自定义的登录失败处理器；
+	@Autowired
+	private DataSource dataSource;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
 	/**
 	* @Title: passwordEncoder  
 	* @Description: TODO(增加密码加密配置)   
@@ -40,7 +50,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+	@Bean
+	public PersistentTokenRepository persistentTokenRepository(){//记住我的配置
+		JdbcTokenRepositoryImpl tokenRepository=new JdbcTokenRepositoryImpl();
+		tokenRepository.setDataSource(dataSource);
+//		tokenRepository.setCreateTableOnStartup(true);
+		return tokenRepository;
+	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		ValidateCodeFilter validateCodeFilter=new ValidateCodeFilter();
@@ -60,6 +76,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginProcessingUrl("/authentication/form")//2、指定自定义个性化页面的url
 		.successHandler(imoocAuthenticationSuccessHandler)//指定登录成功之后使用自定义的处理器，而不使用默认的处理器
 		.failureHandler(imoocAuthenticationFailHandler)//指定登录失败之后使用自定义的处理器，而不使用默认的处理器
+		.and()
+		.rememberMe()
+		.tokenRepository(persistentTokenRepository())
+		.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+		.userDetailsService(userDetailsService)
 		.and()
 		.authorizeRequests()//授权
 		.antMatchers("/imooc-signIn.html").permitAll()//指定/imooc-signIn.html请求不需要认证，就可以访问
