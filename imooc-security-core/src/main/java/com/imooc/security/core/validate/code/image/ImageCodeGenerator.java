@@ -1,4 +1,4 @@
-package com.imooc.security.core.validate.code;
+package com.imooc.security.core.validate.code.image;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,16 +7,28 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import com.imooc.security.core.properties.SecurityProperties;
+import com.imooc.security.core.validate.code.ValidateCodeGenerator;
 
-public class ImageCodeGeneratorImpl implements ValidateCodeGenerator {
+/**
+ * 
+* @ClassName: ImageCodeGenerator
+* @Description: 生成图片
+* @author wb  
+* @date 2018年6月6日  
+*
+ */
+//虽然这里没有使用@Component  但是ValidateCodeBeanConfig里使用了@ConditionalOnMissingBean(name="imageValidateCodeGenerator")
+public class ImageCodeGenerator implements ValidateCodeGenerator {
 	@Autowired
 	private SecurityProperties securityProperties;
 	@Override
-	public ImageCode createImageCode(ServletWebRequest request) {
+	public ImageCode createCode(ServletWebRequest request) {
 		int width = ServletRequestUtils.getIntParameter(request.getRequest(), "width", securityProperties.getCode().getImage().getWidth());
 		int height = ServletRequestUtils.getIntParameter(request.getRequest(), "height", securityProperties.getCode().getImage().getHeight());
 		BufferedImage image=new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);

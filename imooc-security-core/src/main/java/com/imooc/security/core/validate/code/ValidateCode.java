@@ -1,19 +1,18 @@
 package com.imooc.security.core.validate.code;
 
-import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
+/**
+ * 
+* @ClassName: ValidateCode  
+* @Description: 验证码：包括短信验证码
+* @author wb  
+* @date 2018年6月6日  
+*
+ */
+public class ValidateCode {
 
-public class ImageCode {
-
-	private BufferedImage image;
 	private String code;
 	private LocalDateTime exireTime;
-	public BufferedImage getImage() {
-		return image;
-	}
-	public void setImage(BufferedImage image) {
-		this.image = image;
-	}
 	public String getCode() {
 		return code;
 	}
@@ -26,18 +25,17 @@ public class ImageCode {
 	public void setExireTime(LocalDateTime exireTime) {
 		this.exireTime = exireTime;
 	}
-	public ImageCode(BufferedImage image, String code, LocalDateTime exireTime) {
+	public ValidateCode( String code, LocalDateTime exireTime) {
 		super();
-		this.image = image;
+
 		this.code = code;
 		this.exireTime = exireTime;
 	}
-	public ImageCode() {
+	public ValidateCode() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ImageCode(BufferedImage image, String code, int expireIn) {
-		this.image=image;
+	public ValidateCode( String code, int expireIn) {
 		this.code=code;
 		this.exireTime=LocalDateTime.now().plusSeconds(expireIn);
 	}
@@ -45,5 +43,4 @@ public class ImageCode {
 		
 		return LocalDateTime.now().isAfter(exireTime);
 	}
-	
 }
